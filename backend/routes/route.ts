@@ -1,8 +1,9 @@
 import express from "express"
-import * as userController from "../controllers/userController"
+import userController from "../controllers/userController"
 
 const router = express.Router()
 
-router.post("/login", userController.login)
+router.post("/create-login-session", userController.createLoginSession)
+router.post("/check-login-session", userController.checkLoginSession)
 
 export default router

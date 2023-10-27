@@ -1,5 +1,4 @@
 import express from "express"
-import session from "express-session"
 import cors from "cors"
 import dotenv from "dotenv"
 import path from "path"
@@ -21,14 +20,19 @@ app.use(express.json())
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 //セッション
-if (!process.env.SESSION_SECRET_KEY) {
-  throw new Error('SESSION_SECRET_KEY is not defined.')
+const session = require("express-session")
+
+declare module 'express-session' {
+  interface SessionData {
+    user: {
+      name: string
+      avatar: string 
+    }
+  }
 }
 
-const sessionSecretKey = process.env.SESSION_SECRET_KEY || 'default_secret_key'
-
 app.use(session({
-    secret: sessionSecretKey,
+    secret: "secret",
     resave: false,
     saveUninitialized: true
 }));
