@@ -6,33 +6,44 @@ import UserModel from "../models/UserModel"
 class userController {
     /**
      * ユーザー新規作成
-     * @param req 
-     * @param res 
-     * @returns 
      */
     static async createLoginSession (req: Request, res: Response) {
         //validation処理実装する
 
-        const avatar = await FileUploadService.uploadAvatar(req, res)
-        if(!avatar){
-            return res.status(400).send("error")
+        try {
+            const avatar = await FileUploadService.uploadAvatar(req, res)
+            if(!avatar){
+                return res.status(400).json({"error": "ファイルのアップロードに失敗しました"})
+            }
+    
+            const user = UserModel.createUser(req.body.username, avatar)
+    
+            SessionService.createSession(req, res, avatar)
+    
+            return res.status(200)
+
+        }catch(error){
+            return res.status(400).json({"error": error})
         }
-
-        const user = UserModel.createUser(req.body.username, avatar)
-
-        const sessionResult = SessionService.createSession(req, res, avatar)
-        
-        return res.status(200)
     }
 
-    //ログイン確認
+    /**
+     * ログインチェックメソッド
+     */
     static checkLoginSession (req: Request, res: Response) {
-        //loginSessionがあるか確認し、レスポンスを返す
+        const check = SessionService.checkSession(req, res)
+        if(!check){
+            return res.status(400)
+        }
+        return res.status(200).json({user: req.session.user})
     }
 
+    /**
+     * ログアウトメソッド
+     */
     static logout (req: Request, res: Response) {
-        //session破棄
-        //ホームに遷移
+        SessionService.deleteSession(req, res)
+        return res.status(200)
     }
 }
 

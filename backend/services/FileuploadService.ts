@@ -11,7 +11,7 @@ class FileUploadService {
 
         let uploadPath = __dirname + '/uploads/icon/' + avatar.name;
 
-        await avatar.mv(uploadPath, function (err) {
+        await avatar.mv(uploadPath, (err) => {
             if (err) return null;
         });
 

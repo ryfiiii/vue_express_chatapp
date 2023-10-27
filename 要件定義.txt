@@ -4,7 +4,7 @@ vue.js(3.2), express, typescript
 front: tailwindcss, daisyui, socket.io-client, vue-router
 back: nodemon, socket.io, prisma, cors, dotenv
 db: mysql
-middleware: express-session, express-static
+middleware: express-session, express-validator, express-fileupload
 
 ・構造
 /app

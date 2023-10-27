@@ -3,9 +3,6 @@ import { Request, Response } from "express"
 class SessionService {
     /**
      * userセッション作成メソッド
-     * @param req 
-     * @param res 
-     * @returns true
      */
     static createSession(req: Request, res: Response, avatar: string){
         const name: string = req.body.name
@@ -14,8 +11,27 @@ class SessionService {
             name: name,
             avatar: avatar
         }
+    }
 
-        return true
+    /**
+     * userセッション確認メソッド
+     */
+    static checkSession(req: Request, res: Response): Boolean{
+        if(req.session.user){
+            return true
+
+        }else{
+            return false
+        }
+    }
+
+    /**
+     * userセッション破棄メソッド
+     */
+    static deleteSession(req: Request, res: Response){
+        if(req.session.user){
+            delete req.session.user
+        }
     }
 }
 
