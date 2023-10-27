@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "target": "ES2018",
+      "module": "commonjs",
+      "rootDir": "./",
+      "outDir": "./dist",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": ["controllers/**/*.ts", "routes/**/*.ts", "server.ts"],
+    "exclude": ["node_modules"]
+  }
+  
