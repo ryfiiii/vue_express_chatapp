@@ -1,8 +1,8 @@
 ・必要フレームワーク、ライブラリ、パッケージ、データベース,ミドルウェア
 vue.js(3.2), express, typescript
 
-front: tailwindcss, daisyui, socket.io-client
-back: nodemon, socket.io, prisma, cors
+front: tailwindcss, daisyui, socket.io-client, vue-router
+back: nodemon, socket.io, prisma, cors, dotenv
 db: mysql
 middleware: express-session, express-static
 
@@ -12,14 +12,18 @@ middleware: express-session, express-static
         /controllers
             - userController.ts
             - messageController.ts
-        /models (Prismaが自動生成)
-            /prisma
+        /prisma
+            /migrations
                 - schema.prisma
+        /models
+            - userModel.ts
+            - messageModel.ts
         /routes
-            - Routes.ts
+            - route.ts
 	/uploads
 	    /icons (アイコンを保存)
-        - server.ts
+
+    - server.ts
 
     /frontend (Vue.js)
         /src
@@ -39,6 +43,8 @@ login sessionが存在する場合はチャットルーム、ない場合はロ�
 自分のチャットは、右側、他人は左側に表示、スタイリングはtailwindcss、daisyuiで行う
 チャットした内容はdbに保存し永久化できる、prismaを使用し、users,postsテーブルを作成
 
+
+・DB
 users
 	id primarykey autoincrement
 	name
