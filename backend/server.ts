@@ -18,18 +18,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //セッション
 app.use(session({
-    secret: env(""),
+    secret: "aiueo",
     resave: false,
     saveUninitialized: true
-  }));
+}));
 
-// ルートの設定
+//ルーティング
 app.use(router);
-
-// // エラーハンドリング
-// app.use((err, req, res, next) => {
-//   res.status(500).send(err.message);
-// });
 
 app.listen(port, () => {
     console.log(`Serverを起動しました🚀 port: ${port}`)
