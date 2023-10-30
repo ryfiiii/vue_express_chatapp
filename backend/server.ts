@@ -32,6 +32,7 @@ const session = require("express-session")
 declare module 'express-session' {
   interface SessionData {
     user: {
+      id: number
       name: string
       avatar: string 
     }

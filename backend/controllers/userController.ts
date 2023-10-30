@@ -16,9 +16,9 @@ class userController {
                 return res.status(400).json({"error": "ファイルのアップロードに失敗しました"})
             }
     
-            const user = UserModel.createUser(req.body.username, avatar)
+            const user = UserModel.createUser(req.body.username, avatar) //明日async awaitつける
     
-            const createSes = SessionService.createSession(req, res, avatar)
+            const createSes = SessionService.createSession(user.id, req, res, avatar)
             if(!createSes){
                 return res.status(400).json({"error": "セッションの作成に失敗しました"})
             }

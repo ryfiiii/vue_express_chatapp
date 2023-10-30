@@ -4,10 +4,11 @@ class SessionService {
     /**
      * userセッション作成メソッド
      */
-    static createSession(req: Request, res: Response, avatar: string): boolean{
+    static createSession(id: number, req: Request, res: Response, avatar: string): boolean{
         const name: string = req.body.username
 
         req.session.user = {
+            id: id,
             name: name,
             avatar: avatar
         }

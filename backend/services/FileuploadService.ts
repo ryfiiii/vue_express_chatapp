@@ -15,7 +15,7 @@ class FileUploadService {
         file.mv(uploadPath, (err) => {
             console.error(err)
             return null
-        });
+        })
 
         return uploadPath
     }
