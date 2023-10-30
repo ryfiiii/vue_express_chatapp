@@ -1,22 +1,24 @@
 import { Request, Response } from "express"
-import fileUpload, { UploadedFile } from "express-fileupload"
+import { UploadedFile } from "express-fileupload"
+import path from 'path'
 
 class FileUploadService {
-    static async uploadAvatar(req: Request, res: Response): Promise<string | null> {
-        if (!req.files || Object.keys(req.files).length === 0) {
-            return null;
+    static uploadAvatar(req: Request, res: Response): string | null {
+        let file = req.files?.avatar as UploadedFile
+
+        if(!file){
+            return null
         }
 
-        let avatar = req.files.avatar as UploadedFile;
+        const uploadPath = path.join(__dirname, '..', 'uploads/icons', file.name)
 
-        let uploadPath = __dirname + '/uploads/icon/' + avatar.name;
-
-        await avatar.mv(uploadPath, (err) => {
-            if (err) return null;
+        file.mv(uploadPath, (err) => {
+            console.error(err)
+            return null
         });
 
-        return uploadPath;
+        return uploadPath
     }
 }
 
-export default FileUploadService;
+export default FileUploadService

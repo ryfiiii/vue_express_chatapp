@@ -1,23 +1,30 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
-import path from "path"
 import router from "./routes/route"
+import fileUpload, { UploadedFile } from "express-fileupload"
 
 const port = 3000
 const app = express()
+
+//fileupload設定
+app.use(fileUpload())
 
 //env設定
 dotenv.config()
 
 //cors設定
-app.use(cors())
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, 
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 
 //json
 app.use(express.json())
-
-//画像のホスティング
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 //セッション
 const session = require("express-session")
@@ -32,9 +39,14 @@ declare module 'express-session' {
 }
 
 app.use(session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: true
+  secret: 'session_key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    maxAge: 1000 * 60 * 30
+  }
 }));
 
 //ルーティング

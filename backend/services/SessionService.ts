@@ -4,19 +4,25 @@ class SessionService {
     /**
      * userセッション作成メソッド
      */
-    static createSession(req: Request, res: Response, avatar: string){
-        const name: string = req.body.name
+    static createSession(req: Request, res: Response, avatar: string): boolean{
+        const name: string = req.body.username
 
         req.session.user = {
             name: name,
             avatar: avatar
+        }
+
+        if(req.session.user){
+            return true
+        }else {
+            return false
         }
     }
 
     /**
      * userセッション確認メソッド
      */
-    static checkSession(req: Request, res: Response): Boolean{
+    static checkSession(req: Request, res: Response): boolean{
         if(req.session.user){
             return true
 
@@ -28,10 +34,13 @@ class SessionService {
     /**
      * userセッション破棄メソッド
      */
-    static deleteSession(req: Request, res: Response){
-        if(req.session.user){
-            delete req.session.user
-        }
+    static deleteSession(req: Request, res: Response): Boolean{
+        req.session.destroy((err) => {
+            if(err){
+                return false
+            }
+        })
+        return true
     }
 }
 

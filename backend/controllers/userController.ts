@@ -7,20 +7,23 @@ class userController {
     /**
      * ユーザー新規作成
      */
-    static async createLoginSession (req: Request, res: Response) {
+    static createLoginSession (req: Request, res: Response) {
         //validation処理実装する
 
         try {
-            const avatar = await FileUploadService.uploadAvatar(req, res)
+            const avatar = FileUploadService.uploadAvatar(req, res)
             if(!avatar){
                 return res.status(400).json({"error": "ファイルのアップロードに失敗しました"})
             }
     
             const user = UserModel.createUser(req.body.username, avatar)
     
-            SessionService.createSession(req, res, avatar)
+            const createSes = SessionService.createSession(req, res, avatar)
+            if(!createSes){
+                return res.status(400).json({"error": "セッションの作成に失敗しました"})
+            }
     
-            return res.status(200)
+            return res.status(200).json({"success": "セッションを作成しました!"})
 
         }catch(error){
             return res.status(400).json({"error": error})
@@ -31,19 +34,25 @@ class userController {
      * ログインチェックメソッド
      */
     static checkLoginSession (req: Request, res: Response) {
-        const check = SessionService.checkSession(req, res)
-        if(!check){
-            return res.status(400)
+        const user = req.session.user
+
+        if(user) {
+            return res.status(200).json({"user": user})
+        }else{
+            return res.status(200).json({"user": null})
         }
-        return res.status(200).json({user: req.session.user})
     }
 
     /**
      * ログアウトメソッド
      */
     static logout (req: Request, res: Response) {
-        SessionService.deleteSession(req, res)
-        return res.status(200)
+        const del = SessionService.deleteSession(req, res)
+        if(del) {
+            return res.status(200).json({"message": "セッションを削除しました。"})
+        }else {
+            return res.status(400).json({"error": "セッションの削除に失敗しました。"})
+       }
     }
 }
 
