@@ -1,16 +1,48 @@
 <template>
-  <div class="about">
-    <h1 class="text-red-500">This is an about page</h1>
-    <button class="btn btn-primary">aiueo</button>
+  <div>
+    <input type="text" v-model="username" placeholder="Username" />
+    <input type="file" ref="fileInput" />
+    <button @click="uploadFile">Upload</button>
+  </div>
+  
+  <div>
+    <button @click="sessionDelete">Delete!</button>
   </div>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+<script setup lang="ts">
+import { ref } from 'vue';
+import axios from 'axios';
+
+const username = ref('');
+const fileInput = ref<HTMLInputElement | null>(null);
+
+const uploadFile = async () => {
+  if (!fileInput.value?.files?.length || !username.value) {
+    return
+  }
+
+  const file = fileInput.value.files[0];
+  const formData = new FormData();
+  formData.append('username', username.value);
+  formData.append('avatar', file);
+
+  try {
+    const response = await axios.post('http://localhost:3000/create-login-session', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    });
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
   }
 }
-</style>
+
+const sessionDelete = async () => {
+  const res = await axios.get("http://localhost:3000/delete-session", {withCredentials: true})
+  console.log(res)
+}
+</script>
