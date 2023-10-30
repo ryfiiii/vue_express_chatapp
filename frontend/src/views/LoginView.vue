@@ -5,29 +5,20 @@
                 <h1 class="mb-4 text-2xl font-extrabold text-center text-gray-900">
                     Login
                 </h1>
-                <input 
-                    type="text" 
-                    v-model="username" 
-                    placeholder="Username" 
-                    class="w-full p-2 border border-gray-300 rounded-md outline-none text-gray-600 focus:border-indigo-300" 
-                />
+                <input type="text" v-model="username" placeholder="Username"
+                    class="w-full p-2 border border-gray-300 rounded-md outline-none text-gray-600 focus:border-indigo-300" />
                 <div class="mt-4 relative">
-                    <label 
-                        class="block w-full p-2 border border-gray-300 rounded-md cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 text-center"
-                    >
+                    <label
+                        class="block w-full p-2 border border-gray-300 rounded-md cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 text-center">
                         <span class="text-base leading-normal">アイコン写真を選択</span>
-                        <input 
-                            type="file" 
-                            ref="fileInput" 
-                            class="absolute top-0 left-0 opacity-0 cursor-pointer w-full h-full"
-                        />
+                        <input type="file" ref="fileInput"
+                            class="absolute top-0 left-0 opacity-0 cursor-pointer w-full h-full" />
                     </label>
                 </div>
                 <div class="mt-4">
-                    <button 
-                        class="w-full p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 active:bg-indigo-700" 
-                        @click="uploadFile"
-                    >
+                    <button
+                        class="w-full p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 active:bg-indigo-700"
+                        @click="uploadFile">
                         Login
                     </button>
                 </div>
@@ -67,15 +58,5 @@ const uploadFile = async () => {
     } catch (error) {
         console.error(error);
     }
-}
-
-const sessionCheck = async () => {
-    const res = await axios.get("http://localhost:3000/check-login-session", { withCredentials: true })
-    console.log(res)
-}
-
-const sessionDelete = async () => {
-    const res = await axios.get("http://localhost:3000/delete-session", { withCredentials: true })
-    console.log(res)
 }
 </script>
