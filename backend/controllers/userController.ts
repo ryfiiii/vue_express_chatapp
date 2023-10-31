@@ -7,7 +7,7 @@ class userController {
     /**
      * ユーザー新規作成
      */
-    static createLoginSession (req: Request, res: Response) {
+    static async createLoginSession (req: Request, res: Response) {
         //validation処理実装する
 
         try {
@@ -16,7 +16,7 @@ class userController {
                 return res.status(400).json({"error": "ファイルのアップロードに失敗しました"})
             }
     
-            const user = UserModel.createUser(req.body.username, avatar) //明日async awaitつける
+            const user = await UserModel.createUser(req.body.username, avatar)
     
             const createSes = SessionService.createSession(user.id, req, res, avatar)
             if(!createSes){
@@ -34,10 +34,9 @@ class userController {
      * ログインチェックメソッド
      */
     static checkLoginSession (req: Request, res: Response) {
-        const user = req.session.user
 
-        if(user) {
-            return res.status(200).json({"user": user})
+        if(req.session.user) {
+            return res.status(200).json({"user": req.session.user})
         }else{
             return res.status(200).json({"user": null})
         }

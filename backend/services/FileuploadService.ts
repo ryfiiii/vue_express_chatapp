@@ -10,14 +10,16 @@ class FileUploadService {
             return null
         }
 
-        const uploadPath = path.join(__dirname, '..', 'uploads/icons', file.name)
+        const uploadDir = "uploads/icons"
+
+        const uploadPath = path.join(__dirname, '..', uploadDir, file.name)
 
         file.mv(uploadPath, (err) => {
             console.error(err)
             return null
         })
 
-        return uploadPath
+        return path.join(uploadDir, file.name)
     }
 }
 

@@ -6,16 +6,20 @@ class MessageModel {
     /**
      * Post全件取得メソッド
      */
-    static getAllChats(){
-        const chats = prisma.post.findMany()
+    static async getAllChats(){
+        const chats = await prisma.post.findMany({
+            include: {
+                user: true,
+            }
+        })
         return chats
     }
 
     /**
      * Post作成メソッド
      */
-    static createChat(id: number, message: string){
-        const chat = prisma.post.create({
+    static async createChat(id: number, message: string){
+        const chat = await prisma.post.create({
             data: {
                 userId: id,
                 message: message

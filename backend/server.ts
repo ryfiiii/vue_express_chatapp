@@ -2,10 +2,17 @@ import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import router from "./routes/route"
-import fileUpload, { UploadedFile } from "express-fileupload"
+import fileUpload from "express-fileupload"
+import http from "http"
+import { Server } from "socket.io"
+import path from "path"
 
 const port = 3000
 const app = express()
+
+
+//uploadsフォルダ公開設定
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
 //fileupload設定
 app.use(fileUpload())
@@ -50,10 +57,28 @@ app.use(session({
   }
 }));
 
+//HTTPサーバーの作成
+const server = http.createServer(app)
+
+//socket.ioの設定
+export const io = new Server(server, {
+  cors: {
+    origin: "*",
+  }
+})
+
+io.on("connection", (socket) => {
+  console.log("ユーザーが接続しました！")
+
+  socket.on("disconnect", () => {
+    console.log("ユーザーが退出しました")
+  })
+})
+
 //ルーティング
 app.use(router);
 
 //サーバー
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Serverを起動しました🚀 port: ${port}`)
 })
