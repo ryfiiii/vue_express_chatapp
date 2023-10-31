@@ -1,9 +1,15 @@
 # Vue.js + Express + TypeScript Chatアプリ
+
+## ※このアプリはまだ未完成です
+
+## ログイン画面
+
+## チャット機能
+
 ## 必要フレームワーク、ライブラリ、パッケージ、データベース,ミドルウェア
 - **Frontend**
   - Vue.js (3.2)
   - TailwindCSS
-  - DaisyUI
   - socket.io-client
 
 - **Backend**
@@ -23,6 +29,7 @@
   - express-static
 
 ## 機能
+- フロントとバックを完全に独立させ、json形式でやり取りを行う
 - ユーザーログイン機能
   - ユーザー名とアイコン画像をアップロードし、ログイン（login session作成）
   - ログイン画面でバリデーションを行う
@@ -49,54 +56,4 @@
 - user_id (foreign key, references users.id)
 - message
 - created_at
-
-## ディレクトリ構造
-
-/app
-
-│ /backend (Express)
-
-│ │ /controllers
-
-│ │ │ - userController.ts
-
-│ │ │ - messageController.ts
-
-│ │ /prisma
-
-│ │ │ /migrations
-
-│ │ │ - schema.prisma
-
-│ │ /models
-
-│ │ │ - userModel.ts
-
-│ │ │ - messageModel.ts
-
-│ │ /routes
-
-│ │ - route.ts
-
-│ /uploads
-
-│ │ /icons (アイコンを保存)
-
-│ - server.ts
-
-│
-
-│ /frontend (Vue.js)
-
-│ │ /src
-
-│ │ │ /components
-
-│ │ │ /views
-
-│ │ │ - main.js (or main.ts)
-
-│ │ - vue.config.js
-
-│ - package.json
 
