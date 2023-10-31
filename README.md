@@ -3,8 +3,10 @@
 ## ※このアプリはまだ未完成です
 
 ## ログイン画面
+![loginpreview](/frontend/public/login.gif)
 
 ## チャット機能
+![chatpreview](/frontend/public/chat.gif)
 
 ## 必要フレームワーク、ライブラリ、パッケージ、データベース,ミドルウェア
 - **Frontend**
