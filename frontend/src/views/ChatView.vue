@@ -1,24 +1,47 @@
 <template>
-    <div class="p-4 flex flex-col space-y-4">
-        <div v-for="chat in chats" :key="chat.id" :class="{ 'text-right': chat.user.id === loginUser.id }">
-            <div v-if="chat.user.id === loginUser.id" class="flex flex-col items-end">
-                <p class="bg-green-500 text-white max-w-xs rounded-lg p-2">{{ chat.message }}</p>
-                <span class="text-xs text-gray-500">{{ chat.created_at }}</span>
-                <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-8 h-8 rounded-full mt-2">
-            </div>
-            <div v-else class="flex flex-col items-start">
-                <p class="bg-gray-300 max-w-xs rounded-lg p-2">{{ chat.message }}</p>
-                <span class="text-xs text-gray-500">{{ chat.created_at }}</span>
-                <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-8 h-8 rounded-full mt-2">
-            </div>
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-gray-600 py-5 relative">
+            <p class="text-2xl text-white text-center">{{ loginUser.name }}</p>
+            <button class="absolute top-6 left-5 text-white hover:underline" @click="logout">ログアウト</button>
         </div>
+        <div class="bg-blue-200">
+            <div class="p-4 flex flex-col space-y-4">
+                <div class="max-h-650 overflow-x-auto">
+                    <div v-for="chat in chats" :key="chat.id">
+                        <div v-if="chat.user.id === loginUser.id" class="flex items-start justify-end">
+                            <div class="flex flex-col items-end">
+                                <p>{{ chat.user.name }}</p>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-500">{{ formatDate(chat.created_at) }}</span>
+                                    <p class="bg-green-500 text-white max-w-xs rounded-lg p-2">{{ chat.message }}</p>
+                                </div>
+                            </div>
+                            <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-8 h-8 rounded-full ml-2 object-cover">
+                        </div>
+                        <div v-else class="flex items-start">
+                            <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-8 h-8 rounded-full mr-2 object-cover">
+                            <div class="flex flex-col items-start">
+                                <p>{{ chat.user.name }}</p>
+                                <div class="flex items-center space-x-2">
+                                    <p class="bg-gray-300 max-w-xs rounded-lg p-2">{{ chat.message }}</p>
+                                    <span class="text-xs text-gray-500">{{ formatDate(chat.created_at) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="flex justify-between items-center mt-4">
-            <input type="text" v-model="message" class="form-input flex-1 mr-4" placeholder="Type a message">
-            <button @click="sendChat" class="btn btn-primary">Send</button>
+                <div class="flex justify-between items-center mt-4 p-4">
+                    <input type="text" v-model="message" placeholder="Type a message"
+                        class="flex-grow border rounded-lg p-4  mr-2 focus:outline-none focus:border-blue-300" />
+                    <button @click="sendChat"
+                        class="bg-blue-500 text-white rounded-xl py-4 px-5 hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        Send
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-    <button @click="logout" class="btn btn-primary">Logout</button>
 </template>
 
 
@@ -27,10 +50,19 @@
 import axios from 'axios'
 import { ref, onMounted, onUnmounted } from 'vue'
 import io from "socket.io-client"
+import dayjs from "dayjs"
 
 //props
 const props = defineProps({
-    loginUser: Object,
+    loginUser: {
+        type: Object,
+        required: false,
+        default: () => ({
+            id: null,
+            name: null,
+            avatar: null,
+        })
+    }
 })
 
 //取得した全チャット格納
@@ -59,6 +91,10 @@ const logout = async () => {
     const res = await axios.get("http://localhost:3000/delete-session", { withCredentials: true })
     console.log(res)
     emit("logout")
+}
+
+const formatDate = (date: string) => {
+    return dayjs(date).format("MM/DD HH:mm")
 }
 
 //socket.io-clientの設定
