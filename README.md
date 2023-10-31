@@ -12,13 +12,13 @@
 - **Frontend**
   - Vue.js (3.2)
   - TailwindCSS
-  - socket.io-client
+  - socket.io-client (「チャットが送信された時」というイベントをキャッチするため)
 
 - **Backend**
-  - Express
+  - Express (フロントとバックで完全に独立。jsonでやり取り)
   - TypeScript
   - NodeMon
-  - socket.io
+  - socket.io (「チャットが送信された時」というイベントを送信するため)
   - Prisma
   - CORS
   - dotenv
