@@ -9,6 +9,7 @@ class userController {
      */
     static async createLoginSession (req: Request, res: Response) {
         //validation処理実装する
+        //適切なエラーハンドリングを実装する
 
         try {
             const avatar = FileUploadService.uploadAvatar(req, res)

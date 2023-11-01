@@ -7,9 +7,13 @@ class messageController {
      * チャット取得
      */
     static async getChats(req: Request, res: Response){
-        const chats = await MessageModel.getAllChats()
-        // console.log(chats)
-        return res.status(200).json(chats)
+        try {
+            const chats = await MessageModel.getAllChats()
+            return res.status(200).json(chats)
+
+        }catch(err){
+            return res.status(400).json({"error": "Chatの取得に失敗しました。"})
+        }
     }
 
     /**
@@ -17,14 +21,13 @@ class messageController {
      */
     static async postChat(req: Request, res: Response){
         //チャットをバリデーション
+        //適切なエラーハンドリングを実装する
+        
         const message = req.body.message
         //チャット送信者とチャットををDBに保存
         if(!req.session.user){
             return res.status(400).json({error: "セッションが存在しません"})
         }
-
-        // console.log(req.body.message)
-        // console.log(req.session.user.id)
 
         const chat = await MessageModel.createChat(req.session.user.id, message)
         //socket.ioを使用して、フロント側でチャットを再取得・表示

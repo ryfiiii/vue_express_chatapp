@@ -6,6 +6,7 @@ import fileUpload from "express-fileupload"
 import http from "http"
 import { Server } from "socket.io"
 import path from "path"
+import session from "express-session"
 
 const port = 3000
 const app = express()
@@ -34,8 +35,6 @@ app.use(cors(corsOptions));
 app.use(express.json())
 
 //セッション
-const session = require("express-session")
-
 declare module 'express-session' {
   interface SessionData {
     user: {
