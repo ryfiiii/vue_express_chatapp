@@ -5,18 +5,20 @@
                 <h1 class="mb-4 text-2xl font-extrabold text-center text-gray-900">
                     Login
                 </h1>
+                <div v-if="errorMessage">
+                    <p class="text-center text-red-400 mb-2">※{{ errorMessage }}</p>
+                </div>
                 <input type="text" v-model="username" placeholder="Username"
                     class="w-full p-2 border border-gray-300 rounded-md outline-none text-gray-600 focus:border-indigo-300" />
                 <div class="mt-4 relative">
-                    <label
-                        class="block w-full p-2 border border-gray-300 rounded-md cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 text-center">
-                        <span class="text-base leading-normal">アイコン写真を選択</span>
-                        <input type="file" ref="fileInput"
-                            class="absolute top-0 left-0 opacity-0 cursor-pointer w-full h-full" />
+                    <label class="block w-full p-2 border border-gray-300 rounded-md cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 text-center">
+                        <span class="text-base leading-normal">{{ fileName || 'アイコン写真を選択'}}</span>
+                        <input type="file" ref="fileInput" @change="handleFileUpload" accept="image/png, image/jpeg"
+                        class="absolute top-0 left-0 opacity-0 cursor-pointer w-full h-full" />
                     </label>
                 </div>
                 <div class="mt-4">
-                    <button
+                    <button 
                         class="w-full p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 active:bg-indigo-700"
                         @click="uploadFile">
                         Login
@@ -28,23 +30,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref } from 'vue'
+import axios from 'axios'
 
-const username = ref('');
-const fileInput = ref<HTMLInputElement | null>(null);
-
+//App.vueのセッション確認メソッド起動用
 const emit = defineEmits()
+
+//アップロードしたファイルをサーバーへ送信
+const username = ref<string>('')
+const fileInput = ref<HTMLInputElement | null>(null)
+const errorMessage = ref<string>('')
 
 const uploadFile = async () => {
     if (!fileInput.value?.files?.length || !username.value) {
         return
     }
 
-    const file = fileInput.value.files[0];
-    const formData = new FormData();
-    formData.append('username', username.value);
-    formData.append('avatar', file);
+    const file = fileInput.value.files[0]
+    const formData = new FormData()
+    formData.append('username', username.value)
+    formData.append('avatar', file)
 
     try {
         const response = await axios.post('http://localhost:3000/create-login-session', formData, {
@@ -53,10 +58,27 @@ const uploadFile = async () => {
             },
             withCredentials: true,
         });
-        emit("login")
-        console.log(response.data);
-    } catch (error) {
-        console.error(error);
+
+        //レスポンスがsuccessの時だけログイン
+        if(response.data.success){
+            emit("login")
+
+        }else if(response.data.error){
+            errorMessage.value = response.data.error
+        }
+
+    }catch(error) {
+        console.error(error)
+        errorMessage.value = "不明なエラー"
+    }
+}
+
+//ファイルアップローダーの見た目
+const fileName = ref<string>('')
+const handleFileUpload = (e: any) => {
+    const files = e.target.files
+    if(files.length > 0){
+        fileName.value = files[0].name
     }
 }
 </script>
