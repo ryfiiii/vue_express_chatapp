@@ -1,6 +1,5 @@
 # Vue.js + Express + TypeScript Chatアプリ
-
-## ※このアプリはまだ未完成です
+Lineのグループチャットのようにリアルタイムでチャットできるアプリケーション
 
 ## ログイン画面
 ![loginpreview](/frontend/public/login.gif)
