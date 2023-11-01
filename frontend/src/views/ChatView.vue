@@ -6,7 +6,7 @@
         </div>
         <div class="bg-blue-200">
             <div class="p-4 flex flex-col space-y-4">
-                <div class="max-h-650 overflow-x-auto">
+                <div class="max-h-650 overflow-x-auto" ref="chatArea">
                     <div v-for="chat in chats" :key="chat.id">
                         <div v-if="chat.user.id === loginUser.id" class="flex items-start justify-end">
                             <div class="flex flex-col items-end">
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import io from "socket.io-client"
 import dayjs from "dayjs"
 
@@ -63,16 +63,11 @@ const props = defineProps({
     }
 })
 
-//取得した全チャット格納
-const chats = ref<any>([])
-
-//入力される文字格納
-const message = ref<string>("")
-
 //エミット
 const emit = defineEmits()
 
-//関数
+//チャット取得
+const chats = ref<any>([])
 const getChats = async () => {
     try{
         const res = await axios.get("http://localhost:3000/get-chats")
@@ -88,6 +83,8 @@ const getChats = async () => {
     } 
 }
 
+//チャット送信
+const message = ref<string>("")
 const sendChat = async () => {
     try{
         const res = await axios.post("http://localhost:3000/post-chat", { message: message.value }, { withCredentials: true })
@@ -97,13 +94,13 @@ const sendChat = async () => {
         }else if(res.data.error){
             console.error(res.data.error)
         }
-        
+
     }catch(error){
         console.error(error)
     }
-
 }
 
+//ログアウト
 const logout = async () => {
     try{
         const res = await axios.get("http://localhost:3000/delete-session", { withCredentials: true })
@@ -119,6 +116,7 @@ const logout = async () => {
     }
 }
 
+//日時フォーマット
 const formatDate = (date: string) => {
     return dayjs(date).format("MM/DD HH:mm")
 }
@@ -131,10 +129,22 @@ onMounted(() => {
 
     socket.on("chat message", (messages) => {
         chats.value = messages
+        scrollToBottom()
     })
 }),
 
-    onUnmounted(() => {
-        socket.disconnect()
+onUnmounted(() => {
+    socket.disconnect()
+})
+
+//下にスクロール
+const chatArea = ref<any>(null)
+
+const scrollToBottom = () => {
+    nextTick(() => {
+        if(chatArea.value){
+            chatArea.value.scrollTop = chatArea.value.scrollHeight
+        }
     })
+}
 </script>
