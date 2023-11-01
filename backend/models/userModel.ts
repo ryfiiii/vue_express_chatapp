@@ -4,14 +4,20 @@ const prisma = new PrismaClient()
 
 class UserModel {
     static async createUser(name: string, avatar: string){
-        const user = await prisma.user.create({
-            data: {
-                name: name,
-                avatar: avatar
-            }
-        })
+        try {
+            const user = await prisma.user.create({
+                data: {
+                    name: name,
+                    avatar: avatar
+                }
+            })
+            return user
 
-        return user
+        }catch(error){
+            return null
+        }
+
+
     }
 }
 

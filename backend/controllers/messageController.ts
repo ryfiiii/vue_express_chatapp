@@ -9,10 +9,13 @@ class messageController {
     static async getChats(req: Request, res: Response){
         try {
             const chats = await MessageModel.getAllChats()
-            return res.status(200).json(chats)
+            if(!chats){
+                return res.json({"error": "チャットの取得に失敗しました"})
+            }
+            return res.json({"success": chats})
 
         }catch(err){
-            return res.status(400).json({"error": "Chatの取得に失敗しました。"})
+            return res.status(400)
         }
     }
 
@@ -21,19 +24,31 @@ class messageController {
      */
     static async postChat(req: Request, res: Response){
         //チャットをバリデーション
-        //適切なエラーハンドリングを実装する
-        
-        const message = req.body.message
-        //チャット送信者とチャットををDBに保存
-        if(!req.session.user){
-            return res.status(400).json({error: "セッションが存在しません"})
-        }
 
-        const chat = await MessageModel.createChat(req.session.user.id, message)
-        //socket.ioを使用して、フロント側でチャットを再取得・表示
-        const chats = await MessageModel.getAllChats()
-        io.emit("chat message", chats)
-        res.status(200).json({chat: chat})
+        try {
+            const message = req.body.message
+
+            if(!req.session.user){
+                return res.json({"error": "セッションが存在しません"})
+            }
+    
+            const chat = await MessageModel.createChat(req.session.user.id, message)
+            if(!chat){
+                return res.json({"error": "チャットの作成に失敗しました"})
+            }
+    
+            //socket.ioを使用して、フロント側でチャットを再取得・表示
+            const chats = await MessageModel.getAllChats()
+            if(!chats){
+                return res.json({"error": "チャットの取得に失敗しました"})
+            }
+    
+            io.emit("chat message", chats)
+            res.json({"success": chat})
+
+        }catch(error){
+            return res.status(400)
+        }
     }
 }
 

@@ -9,25 +9,27 @@ class userController {
      */
     static async createLoginSession (req: Request, res: Response) {
         //validation処理実装する
-        //適切なエラーハンドリングを実装する
 
         try {
             const avatar = FileUploadService.uploadAvatar(req, res)
             if(!avatar){
-                return res.status(400).json({"error": "ファイルのアップロードに失敗しました"})
+                return res.json({"error": "ファイルのアップロードに失敗しました"})
             }
     
             const user = await UserModel.createUser(req.body.username, avatar)
+            if(!user){
+                return res.json({"error": "データベースの登録に失敗しました"})
+            }
     
             const createSes = SessionService.createSession(user.id, req, res, avatar)
             if(!createSes){
-                return res.status(400).json({"error": "セッションの作成に失敗しました"})
+                return res.json({"error": "セッションの作成に失敗しました"})
             }
     
-            return res.status(200).json({"success": "セッションを作成しました!"})
+            return res.json({"success": "セッションを作成しました!"})
 
         }catch(error){
-            return res.status(400).json({"error": error})
+            return res.status(400)
         }
     }
 
@@ -37,9 +39,9 @@ class userController {
     static checkLoginSession (req: Request, res: Response) {
 
         if(req.session.user) {
-            return res.status(200).json({"user": req.session.user})
+            return res.json({"user": req.session.user})
         }else{
-            return res.status(200).json({"user": null})
+            return res.json({"user": null})
         }
     }
 
@@ -49,9 +51,9 @@ class userController {
     static logout (req: Request, res: Response) {
         const del = SessionService.deleteSession(req, res)
         if(del) {
-            return res.status(200).json({"message": "セッションを削除しました。"})
+            return res.json({"success": "セッションを削除しました。"})
         }else {
-            return res.status(400).json({"error": "セッションの削除に失敗しました。"})
+            return res.json({"error": "セッションの削除に失敗しました。"})
        }
     }
 }

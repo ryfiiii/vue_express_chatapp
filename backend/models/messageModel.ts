@@ -7,25 +7,35 @@ class MessageModel {
      * Post全件取得メソッド
      */
     static async getAllChats(){
-        const chats = await prisma.post.findMany({
-            include: {
-                user: true,
-            }
-        })
-        return chats
+        try{
+            const chats = await prisma.post.findMany({
+                include: {
+                    user: true,
+                }
+            })
+            return chats
+
+        }catch(error){
+            return null
+        }
     }
 
     /**
      * Post作成メソッド
      */
     static async createChat(id: number, message: string){
-        const chat = await prisma.post.create({
-            data: {
-                userId: id,
-                message: message
-            }
-        })
-        return chat
+        try{
+            const chat = await prisma.post.create({
+                data: {
+                    userId: id,
+                    message: message
+                }
+            })
+            return chat
+
+        }catch(error){
+            return null
+        }
     }
 }
 

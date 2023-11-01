@@ -44,8 +44,6 @@
     </div>
 </template>
 
-
-
 <script setup lang="ts">
 import axios from 'axios'
 import { ref, onMounted, onUnmounted } from 'vue'
@@ -69,25 +67,56 @@ const props = defineProps({
 const chats = ref<any>([])
 
 //入力される文字格納
-const message = ref("")
+const message = ref<string>("")
 
 //エミット
 const emit = defineEmits()
 
 //関数
 const getChats = async () => {
-    const res = await axios.get("http://localhost:3000/get-chats")
-    chats.value = res.data
+    try{
+        const res = await axios.get("http://localhost:3000/get-chats")
+        if(res.data.success){
+            chats.value = res.data.success
+
+        }else if(res.data.error){
+            console.log(res.data.error)
+        }
+
+    }catch(error){
+        console.error(error)
+    } 
 }
 
 const sendChat = async () => {
-    const res = await axios.post("http://localhost:3000/post-chat", { message: message.value }, { withCredentials: true })
-    message.value = ""
+    try{
+        const res = await axios.post("http://localhost:3000/post-chat", { message: message.value }, { withCredentials: true })
+        if(res.data.success){
+            message.value = ""
+
+        }else if(res.data.error){
+            console.error(res.data.error)
+        }
+        
+    }catch(error){
+        console.error(error)
+    }
+
 }
 
 const logout = async () => {
-    const res = await axios.get("http://localhost:3000/delete-session", { withCredentials: true })
-    emit("logout")
+    try{
+        const res = await axios.get("http://localhost:3000/delete-session", { withCredentials: true })
+        if(res.data.success){
+            emit("logout")
+
+        }else if(res.data.error){
+            console.error(res.data.error)
+        }
+
+    }catch(error){
+        console.error(error)
+    }
 }
 
 const formatDate = (date: string) => {

@@ -52,7 +52,7 @@ const uploadFile = async () => {
     formData.append('avatar', file)
 
     try {
-        const response = await axios.post('http://localhost:3000/create-login-session', formData, {
+        const res = await axios.post('http://localhost:3000/create-login-session', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -60,11 +60,11 @@ const uploadFile = async () => {
         });
 
         //レスポンスがsuccessの時だけログイン
-        if(response.data.success){
+        if(res.data.success){
             emit("login")
 
-        }else if(response.data.error){
-            errorMessage.value = response.data.error
+        }else if(res.data.error){
+            errorMessage.value = res.data.error
         }
 
     }catch(error) {
