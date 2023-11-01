@@ -34,8 +34,6 @@ const uploadFile = async () => {
       },
       withCredentials: true,
     });
-
-    console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -43,6 +41,5 @@ const uploadFile = async () => {
 
 const sessionDelete = async () => {
   const res = await axios.get("http://localhost:3000/delete-session", {withCredentials: true})
-  console.log(res)
 }
 </script>

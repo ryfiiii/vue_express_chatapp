@@ -13,13 +13,13 @@
                                 <p>{{ chat.user.name }}</p>
                                 <div class="flex items-center space-x-2">
                                     <span class="text-xs text-gray-500">{{ formatDate(chat.created_at) }}</span>
-                                    <p class="bg-green-500 text-white max-w-xs rounded-lg p-2">{{ chat.message }}</p>
+                                    <p class="bg-green-500 text-black max-w-xs rounded-lg p-2">{{ chat.message }}</p>
                                 </div>
                             </div>
-                            <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-8 h-8 rounded-full ml-2 object-cover">
+                            <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-10 h-10 rounded-full ml-2 object-cover">
                         </div>
                         <div v-else class="flex items-start">
-                            <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-8 h-8 rounded-full mr-2 object-cover">
+                            <img :src="'http://localhost:3000/' + chat.user.avatar" alt="avatar" class="w-10 h-10 rounded-full mr-2 object-cover">
                             <div class="flex flex-col items-start">
                                 <p>{{ chat.user.name }}</p>
                                 <div class="flex items-center space-x-2">
@@ -78,18 +78,15 @@ const emit = defineEmits()
 const getChats = async () => {
     const res = await axios.get("http://localhost:3000/get-chats")
     chats.value = res.data
-    console.log(res.data)
 }
 
 const sendChat = async () => {
     const res = await axios.post("http://localhost:3000/post-chat", { message: message.value }, { withCredentials: true })
     message.value = ""
-    console.log(res.data)
 }
 
 const logout = async () => {
     const res = await axios.get("http://localhost:3000/delete-session", { withCredentials: true })
-    console.log(res)
     emit("logout")
 }
 
