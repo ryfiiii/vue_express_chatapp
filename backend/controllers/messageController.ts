@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import MessageModel from "../models/MessageModel"
 import { io } from "../server"
+import ValidationService from "../services/ValidationService"
 
 class messageController {
     /**
@@ -23,10 +24,14 @@ class messageController {
      * チャット投稿
      */
     static async postChat(req: Request, res: Response){
-        //チャットをバリデーション
 
         try {
             const message = req.body.message
+
+            const validate = ValidationService.chatValidate(message)
+            if(!validate){
+                return res.json({"error": "メッセージは1~250字で日本語・英語・英数字のみ使用できます"})
+            }
 
             if(!req.session.user){
                 return res.json({"error": "セッションが存在しません"})

@@ -43,6 +43,7 @@ const errorMessage = ref<string>('')
 
 const uploadFile = async () => {
     if (!fileInput.value?.files?.length || !username.value) {
+        errorMessage.value = "空のフィールドが存在します"
         return
     }
 

@@ -2,15 +2,19 @@ import { Request, Response } from "express"
 import SessionService from "../services/SessionService"
 import FileUploadService from "../services/FileuploadService"
 import UserModel from "../models/UserModel"
+import ValidationService from "../services/ValidationService"
 
 class userController {
     /**
      * ユーザー新規作成
      */
     static async createLoginSession (req: Request, res: Response) {
-        //validation処理実装する
-
         try {
+            const validate = ValidationService.userValidate(req, res)
+            if(!validate){
+                return res.json({"error": "ユーザーネームは、1~20字で日本語・英語・英数字のみ使用できます"})
+            }
+
             const avatar = FileUploadService.uploadAvatar(req, res)
             if(!avatar){
                 return res.json({"error": "ファイルのアップロードに失敗しました"})

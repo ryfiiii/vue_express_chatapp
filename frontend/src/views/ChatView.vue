@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="flex justify-between items-center mt-4 p-4">
-                    <input type="text" v-model="message" placeholder="Type a message"
+                    <input type="text" v-model="message" :placeholder="errorMessage"
                         class="flex-grow border rounded-lg p-4  mr-2 focus:outline-none focus:border-blue-300" />
                     <button @click="sendChat"
                         class="bg-blue-500 text-white rounded-xl py-4 px-5 hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
@@ -66,6 +66,9 @@ const props = defineProps({
 //エミット
 const emit = defineEmits()
 
+//エラー文
+const errorMessage = ref<string>("メッセージを入力")
+
 //チャット取得
 const chats = ref<any>([])
 const getChats = async () => {
@@ -90,8 +93,11 @@ const sendChat = async () => {
         const res = await axios.post("http://localhost:3000/post-chat", { message: message.value }, { withCredentials: true })
         if(res.data.success){
             message.value = ""
+            errorMessage.value = "メッセージを入力"
 
         }else if(res.data.error){
+            message.value = ""
+            errorMessage.value = res.data.error
             console.error(res.data.error)
         }
 
