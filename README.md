@@ -45,16 +45,4 @@ Lineのグループチャットのようにリアルタイムでチャットで�
   - チャットの内容はDBに保存し永久化
   - Prismaを使用し、users, postsテーブルを作成
 
-## DB構造
-### users
-- id (primary key, autoincrement)
-- name
-- image
-- created_at
-
-### posts
-- id (primary key, autoincrement)
-- user_id (foreign key, references users.id)
-- message
-- created_at
 
